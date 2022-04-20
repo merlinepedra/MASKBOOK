@@ -264,7 +264,7 @@
     "plugin_red_packet_nft_share_claimed_message_not_twitter": "{{network}} 에서 @{{sender}} 의 NFT 레드 패킷을 클레임했습니다.\n{{payload}}",
     "plugin_red_packet_nft_tip": "이것은 NFT 레드 패킷입니다.",
     "plugin_red_packet_attached_message": "첨부 메시지",
-    "plugin_red_packet_from": "보낸사람: {{name}}",
+    "plugin_red_packet_from": "보낸사람: ",
     "plugin_red_packet_description_claimed": "이미 수령하였습니다.",
     "plugin_red_packet_description_expired": "이 빨간 백 이미 만료되었습니다.",
     "plugin_red_packet_description_refunded": "이 빨간 백 이미 반환되었습니다.",

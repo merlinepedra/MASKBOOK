@@ -212,7 +212,7 @@ export function RedPacket(props: RedPacketProps) {
                             {myStatus}
                         </Typography>
                         <Typography className={classes.from} variant="body1">
-                            {t('plugin_red_packet_from', { name: payload.sender.name ?? '-' })}
+                            {t('plugin_red_packet_from')} {payload.sender.name ?? '-'}
                         </Typography>
                     </div>
                 </div>

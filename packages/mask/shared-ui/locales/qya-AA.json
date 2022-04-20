@@ -336,7 +336,7 @@
     "plugin_red_packet_nft_tip": "crwdns8155:0crwdne8155:0",
     "plugin_red_packet_nft_no_history": "crwdns12991:0crwdne12991:0",
     "plugin_red_packet_attached_message": "crwdns4739:0crwdne4739:0",
-    "plugin_red_packet_from": "crwdns4741:0{{name}}crwdne4741:0",
+    "plugin_red_packet_from": "crwdns4741:0crwdne4741:0",
     "plugin_red_packet_description_claimed": "crwdns4743:0{{amount}}crwdnd4743:0{{symbol}}crwdne4743:0",
     "plugin_red_packet_description_expired": "crwdns4745:0crwdne4745:0",
     "plugin_red_packet_description_refunded": "crwdns4747:0crwdne4747:0",

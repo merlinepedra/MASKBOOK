@@ -350,7 +350,7 @@
     "plugin_red_packet_nft_tip": "This is an NFT lucky drop.",
     "plugin_red_packet_nft_no_history": "You haven’t created any NFT lucky drop yet. Try to create and share lucky with your friends.",
     "plugin_red_packet_attached_message": "Attached Message",
-    "plugin_red_packet_from": "From: @{{name}}",
+    "plugin_red_packet_from": "From: @",
     "plugin_red_packet_description_claimed": "You got {{amount}} {{symbol}}",
     "plugin_red_packet_description_expired": "The Lucky Drop is expired.",
     "plugin_red_packet_description_refunded": "The Lucky Drop has been refunded.",

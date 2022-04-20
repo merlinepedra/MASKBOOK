@@ -326,7 +326,7 @@
     "plugin_red_packet_nft_tip": "这是一个 NFT 红包。",
     "plugin_red_packet_nft_no_history": "您还没有创建任何NFT红包。尝试创建红包并与您的朋友分享。",
     "plugin_red_packet_attached_message": "附加信息",
-    "plugin_red_packet_from": "来自：@{{name}}",
+    "plugin_red_packet_from": "来自：@",
     "plugin_red_packet_description_claimed": "你获得了 {{amount}} {{symbol}}",
     "plugin_red_packet_description_expired": "此红包已过期。",
     "plugin_red_packet_description_refunded": "此红包已退款。",
