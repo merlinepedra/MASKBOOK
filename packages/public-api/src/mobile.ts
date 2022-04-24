@@ -57,7 +57,6 @@ export interface SharedNativeAPIs {
         options?: {
             linkedProfileMergePolicy?: 0 | 1
             deleteUndefinedFields?: boolean
-            protectPrivateKey?: boolean
             createWhenNotExist?: boolean
         }
     }): Promise<void>

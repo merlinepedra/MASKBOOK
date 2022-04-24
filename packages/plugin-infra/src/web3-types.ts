@@ -63,6 +63,7 @@ export declare namespace Web3Plugin {
             NetworkPluginID,
             {
                 supportedChainIds?: number[]
+                tipsSupportedChains?: Array<{ name: string; icon: URL }>
             }
         >
     >
@@ -96,6 +97,13 @@ export declare namespace Web3Plugin {
         icon: URL
         /** The provider name */
         name: string
+    }
+
+    export interface ConnectionResult<ChainId = number, NetworkType = string, ProviderType = string> {
+        account: string
+        chainId: ChainId
+        networkType: NetworkType
+        providerType: ProviderType
     }
 
     export interface ApplicationCategoryDescriptor {
@@ -361,15 +369,19 @@ export declare namespace Web3Plugin {
             network: NetworkDescriptor
             provider?: ProviderDescriptor
             children?: React.ReactNode
+            /** Invoke if network icon clicked */
             onClick?: (network: NetworkDescriptor, provider?: ProviderDescriptor) => void
-            onSubmit?: (network: NetworkDescriptor, provider?: ProviderDescriptor) => void
+            /** Invoke if connection submit */
+            onSubmit?: (network: NetworkDescriptor, provider?: ProviderDescriptor, result?: ConnectionResult) => void
         }
         export interface ProviderIconClickBaitProps {
             network: NetworkDescriptor
             provider: ProviderDescriptor
             children?: React.ReactNode
+            /** Invoke if provider icon clicked */
             onClick?: (network: NetworkDescriptor, provider: ProviderDescriptor) => void
-            onSubmit?: (network: NetworkDescriptor, provider: ProviderDescriptor) => void
+            /** Invoke if connection submit */
+            onSubmit?: (network: NetworkDescriptor, provider: ProviderDescriptor, result?: ConnectionResult) => void
         }
         export interface ApplicationCategoryIconClickBaitProps {
             category: ApplicationCategoryDescriptor
