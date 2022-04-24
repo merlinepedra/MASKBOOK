@@ -2,10 +2,10 @@ import { useCallback } from 'react'
 import { DialogActions, DialogContent, Typography } from '@mui/material'
 import ErrorIcon from '@mui/icons-material/Error'
 import { useRemoteControlledDialog } from '@masknet/shared-base-ui'
+import { InjectedDialog } from '@masknet/shared'
 import { CrossIsolationMessages } from '@masknet/shared-base'
 import { useChainIdValid } from '@masknet/web3-shared-evm'
 import { makeStyles } from '@masknet/theme'
-import { InjectedDialog } from '../../../../components/shared/InjectedDialog'
 import { WalletStatusBox } from '../../../../components/shared/WalletStatusBox'
 import { useI18N } from '../../../../utils'
 import { WalletMessages } from '../../messages'
@@ -13,14 +13,18 @@ import { ApplicationBoard } from '../../../../components/shared/ApplicationBoard
 
 const useStyles = makeStyles()((theme) => ({
     content: {
-        padding: theme.spacing(2, 3, 3),
+        padding: theme.spacing(2.5),
     },
     footer: {
         fontSize: 12,
+        marginRight: 16,
         textAlign: 'left',
         padding: theme.spacing(2),
         borderTop: `1px solid ${theme.palette.divider}`,
         justifyContent: 'flex-start',
+    },
+    walletStatusWrapper: {
+        marginRight: 16,
     },
     address: {
         fontSize: 16,
@@ -63,12 +67,7 @@ export function WalletStatusDialog(props: WalletStatusDialogProps) {
             <DialogContent className={classes.content}>
                 <Typography className={classes.subTitle}>{t('wallets')}</Typography>
                 <WalletStatusBox isDashboard={props.isDashboard} />
-                {!props.isDashboard && (
-                    <>
-                        <Typography className={classes.subTitle}>{t('applications')}</Typography>
-                        <ApplicationBoard />
-                    </>
-                )}
+                {!props.isDashboard && <ApplicationBoard />}
             </DialogContent>
             {!chainIdValid ? (
                 <DialogActions className={classes.footer}>

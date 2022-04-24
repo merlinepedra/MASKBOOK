@@ -1,17 +1,17 @@
-import type BigNumber from 'bignumber.js'
-import type { JsonRpcPayload } from 'web3-core-helpers'
+import { createPluginMessage, PluginMessageEmitter } from '@masknet/plugin-infra'
+import type { NetworkPluginID } from '@masknet/plugin-infra/src/web3-types'
 import type {
-    FungibleTokenDetailed,
+    ChainId,
     ERC721ContractDetailed,
+    GasOption,
     GasOptions,
     NetworkType,
     ProviderType,
     TransactionState,
     Wallet,
-    GasOption,
-    ChainId,
 } from '@masknet/web3-shared-evm'
-import { createPluginMessage, PluginMessageEmitter } from '@masknet/plugin-infra'
+import type BigNumber from 'bignumber.js'
+import type { JsonRpcPayload } from 'web3-core-helpers'
 import { PLUGIN_ID } from './constants'
 
 export type TransactionDialogEvent =
@@ -34,6 +34,7 @@ export type GasPriceDialogEvent = {
 export type SelectProviderDialogEvent =
     | {
           open: true
+          pluginID?: NetworkPluginID
       }
     | {
           open: false
@@ -43,12 +44,17 @@ export type SelectProviderDialogEvent =
 export type ConnectWalletDialogEvent =
     | {
           open: true
-          providerType: ProviderType
           networkType: NetworkType
+          providerType: ProviderType
       }
     | {
           open: false
-          result: boolean
+          result?: {
+              account: string
+              chainId: ChainId
+              networkType: NetworkType
+              providerType: ProviderType
+          }
       }
 
 export type SelectWalletDialogEvent =
@@ -100,33 +106,6 @@ export type WalletConnectQRCodeDialogEvent =
       }
     | {
           open: false
-      }
-
-export type SelectTokenDialogEvent =
-    | {
-          open: true
-          uuid: string
-          chainId?: ChainId
-          disableNativeToken?: boolean
-          disableSearchBar?: boolean
-          FungibleTokenListProps?: {
-              keyword?: string
-              whitelist?: string[]
-              blacklist?: string[]
-              tokens?: FungibleTokenDetailed[]
-              selectedTokens?: string[]
-          }
-          title?: string
-      }
-    | {
-          open: false
-          uuid: string
-
-          /**
-           * The selected detailed token.
-           */
-          token?: FungibleTokenDetailed
-          title?: string
       }
 
 export type SelectNftContractDialogEvent = {
@@ -187,11 +166,6 @@ export interface WalletMessage {
      * Gas setting dialog
      */
     gasSettingDialogUpdated: GasSettingDialogEvent
-
-    /**
-     * Select token dialog
-     */
-    selectTokenDialogUpdated: SelectTokenDialogEvent
 
     /**
      * Select nft contract dialog
