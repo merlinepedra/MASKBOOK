@@ -1,6 +1,7 @@
 import { PostIdentifier, ProfileIdentifier } from '@masknet/shared-base'
 import { openWindow } from '@masknet/shared-base-ui'
 import urlcat from 'urlcat'
+import { isAndroidApp } from '../../../shared'
 import type { SocialNetwork } from '../../social-network/types'
 import { createSNSAdaptorSpecializedPostContext } from '../../social-network/utils/create-post-context'
 import { deconstructPayload } from '../../utils'
@@ -8,15 +9,17 @@ import { twitterBase } from './base'
 import { TwitterDecoder, __TwitterEncoder } from '@masknet/encryption'
 import { usernameValidator } from './utils/user'
 
+const twitterUrl = isAndroidApp ? 'https://mobile.twitter.com/' : 'https://twitter.com/'
+
 const getPostURL = (post: PostIdentifier): URL | null => {
     if (!(post.identifier instanceof ProfileIdentifier)) return null
-    return new URL(`https://twitter.com/${post.identifier.userId}/status/${post.postId}`)
+    return new URL(`${twitterUrl}${post.identifier.userId}/status/${post.postId}`)
 }
 export const twitterShared: SocialNetwork.Shared & SocialNetwork.Base = {
     ...twitterBase,
     utils: {
-        getHomePage: () => 'https://twitter.com',
-        getProfilePage: (userId) => `https://twitter.com/${userId}`,
+        getHomePage: () => twitterUrl,
+        getProfilePage: (userId) => `${twitterUrl}${userId}`,
         isValidUsername: usernameValidator,
         textPayloadPostProcessor: {
             encoder: __TwitterEncoder,
@@ -29,6 +32,11 @@ export const twitterShared: SocialNetwork.Shared & SocialNetwork.Base = {
         getPostURL,
         share(text) {
             const url = this.getShareLinkURL!(text)
+            if (isAndroidApp) {
+                location.assign(url)
+                return
+            }
+
             const width = 700
             const height = 520
             const openedWindow = openWindow(url, 'share', {
@@ -50,7 +58,9 @@ export const twitterShared: SocialNetwork.Shared & SocialNetwork.Base = {
             }
         },
         getShareLinkURL(message) {
-            const url = urlcat('https://twitter.com/intent/tweet', { text: message })
+            const url = urlcat(isAndroidApp ? `${twitterUrl}compose/tweet` : `${twitterUrl}intent/tweet`, {
+                text: message,
+            })
             return new URL(url)
         },
         createPostContext: createSNSAdaptorSpecializedPostContext({
