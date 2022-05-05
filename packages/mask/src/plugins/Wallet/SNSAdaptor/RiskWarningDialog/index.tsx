@@ -117,7 +117,7 @@ export function WalletRiskWarningDialog() {
                 <Button
                     className={classnames(classes.button, classes.cancel, 'dashboard-style')}
                     fullWidth
-                    variant="flat"
+                    variant="outlined"
                     onClick={onClose}
                     size="large">
                     {t('cancel')}
