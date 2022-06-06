@@ -9,6 +9,7 @@ import {
     ListItemIcon as MuiListItemIcon,
     ListItemText as MuiListItemText,
     Box,
+    useTheme,
 } from '@mui/material'
 import { TransactionStatusType } from '@masknet/web3-shared-evm'
 import {
@@ -36,7 +37,7 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord'
 import { NextIDVerificationStatus, useNextIDConnectStatus } from '../DataSource/useNextID'
 import { MaskIcon } from '../../resources/MaskIcon'
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = makeStyles<{ iconFontSize?: string }>()((theme, { iconFontSize = '1.5rem' }) => ({
     title: {
         color: theme.palette.mode === 'dark' ? theme.palette.text.primary : 'rgb(15, 20, 25)',
         display: 'flex',
@@ -72,6 +73,9 @@ const useStyles = makeStyles()((theme) => ({
     maskFilledIcon: {
         marginRight: 6,
     },
+    iconFont: {
+        fontSize: iconFontSize,
+    },
 }))
 export interface ToolboxHintProps {
     Container?: React.ComponentType<React.PropsWithChildren<{}>>
@@ -81,6 +85,7 @@ export interface ToolboxHintProps {
     Typography?: React.ComponentType<Pick<TypographyProps, 'children' | 'className'>>
     iconSize?: number
     badgeSize?: number
+    iconFontSize?: string
     mini?: boolean
     category: 'wallet' | 'application'
 }
@@ -95,19 +100,21 @@ function ToolboxHintForApplication(props: ToolboxHintProps) {
         Container = 'div',
         Typography = MuiTypography,
         iconSize = 24,
+        iconFontSize,
         mini,
         ListItemText = MuiListItemText,
     } = props
-    const { classes } = useStyles()
+    const { classes } = useStyles({ iconFontSize })
     const { t } = useI18N()
     const { openDialog } = useRemoteControlledDialog(WalletMessages.events.ApplicationDialogUpdated)
     return (
         <GuideStep step={1} total={4} tip={t('user_guide_tip_1')}>
             <Container>
                 <ListItemButton onClick={openDialog}>
-                    <ListItemIcon>
-                        <MaskIcon style={{ width: iconSize, height: iconSize }} />
-                    </ListItemIcon>
+                    <MaskIcon
+                        style={{ width: iconFontSize ? '1em' : iconSize, height: iconFontSize ? '1em' : iconSize }}
+                        className={classes.iconFont}
+                    />
                     {mini ? null : (
                         <ListItemText
                             primary={
@@ -136,14 +143,15 @@ function ToolboxHintForWallet(props: ToolboxHintProps) {
         ListItemText = MuiListItemText,
         ListItemIcon = MuiListItemIcon,
         Container = 'div',
+        iconFontSize,
         Typography = MuiTypography,
         iconSize = 24,
-        badgeSize = 10,
+        badgeSize = 12,
         mini,
     } = props
-    const { classes } = useStyles()
+    const { classes } = useStyles({ iconFontSize })
     const { openWallet, isWalletValid, walletTitle, chainColor, shouldDisplayChainIndicator } = useToolbox()
-
+    const theme = useTheme()
     const networkDescriptor = useNetworkDescriptor()
     const providerDescriptor = useProviderDescriptor()
 
@@ -165,12 +173,12 @@ function ToolboxHintForWallet(props: ToolboxHintProps) {
                                 <WalletIcon
                                     size={iconSize}
                                     badgeSize={badgeSize}
-                                    networkIcon={providerDescriptor?.icon} // switch the icon to meet design
-                                    providerIcon={networkDescriptor?.icon}
-                                    isBorderColorNotDefault
+                                    mainIcon={providerDescriptor?.icon}
+                                    badgeIcon={networkDescriptor?.icon}
+                                    badgeIconBorderColor={theme.palette.background.paper}
                                 />
                             ) : (
-                                <AccountBalanceWalletIcon />
+                                <AccountBalanceWalletIcon className={classes.iconFont} />
                             )}
                         </ListItemIcon>
                         {mini ? null : (

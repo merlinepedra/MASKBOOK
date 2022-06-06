@@ -1,24 +1,24 @@
 import type { AsyncStateRetry } from 'react-use/lib/useAsyncRetry'
 import { Box, Card, CircularProgress, Typography, Paper, Link } from '@mui/material'
 import { useStylesExtends, makeStyles, MaskColorVar } from '@masknet/theme'
-import { ImageIcon } from '@masknet/shared'
+import { WalletIcon } from '@masknet/shared'
 import { WarningTriangleIcon } from '@masknet/icons'
-import { NetworkPluginID, useProviderDescriptor } from '@masknet/plugin-infra/web3'
 import {
-    ProviderType,
-    resolveProviderName,
-    resolveProviderShortenLink,
-    resolveProviderHomeLink,
-} from '@masknet/web3-shared-evm'
+    useProviderDescriptor,
+    useNetworkDescriptor,
+    useWeb3State,
+    Web3Plugin,
+    NetworkPluginID,
+} from '@masknet/plugin-infra/web3'
 import ActionButton from '../../../../extension/options-page/DashboardComponents/ActionButton'
 import { useI18N } from '../../../../utils'
 import { Trans } from 'react-i18next'
 
-const useStyles = makeStyles()((theme) => ({
+const useStyles = makeStyles<{ contentBackground?: string }>()((theme, props) => ({
     content: {
-        padding: theme.spacing(2, 4, 3),
+        padding: theme.spacing('22px', '12px'),
         borderRadius: 8,
-        backgroundColor: theme.palette.background.default,
+        background: props.contentBackground ?? theme.palette.background.default,
     },
     tipContent: {
         display: 'flex',
@@ -26,55 +26,77 @@ const useStyles = makeStyles()((theme) => ({
         alignItems: 'center',
         marginTop: 10,
         backgroundColor: MaskColorVar.warningBackground,
-        padding: theme.spacing(2, 0, 2, 1.5),
+        padding: '14.5px 14.5px 16px 14.5px',
         borderRadius: 8,
     },
     tipContentText: {
         color: MaskColorVar.warning,
-        fontSize: 12,
-        marginLeft: 10,
+        fontSize: 13,
+        marginLeft: 8.5,
     },
     tipLink: {
         color: MaskColorVar.warning,
         textDecoration: 'underline',
     },
+    connectWith: {
+        fontSize: '14px',
+        color: theme.palette.maskColor.dark,
+        fontWeight: 700,
+    },
     error: {
-        fontSize: 12,
-        paddingTop: theme.spacing(0.5),
+        fontSize: 14,
         paddingRight: theme.spacing(1),
+    },
+    progress: {
+        fontSize: 14,
+        color: theme.palette.common.black,
+    },
+    warningTriangleIcon: {
+        fontSize: 20,
     },
 }))
 
 export interface ConnectionProgressProps extends withClasses<never> {
-    providerType: ProviderType
+    providerType: Web3Plugin.ProviderDescriptor['type']
+    networkType: Web3Plugin.NetworkDescriptor['type']
+    networkPluginId: NetworkPluginID
     connection: AsyncStateRetry<true>
 }
 
 export function ConnectionProgress(props: ConnectionProgressProps) {
-    const { providerType, connection } = props
+    const { providerType, networkType, networkPluginId, connection } = props
     const { value: connected, loading, error, retry } = connection
 
+    const { Utils } = useWeb3State(networkPluginId)
+    const providerDescriptor = useProviderDescriptor(providerType, networkPluginId)
+    const networkDescriptor = useNetworkDescriptor(networkType, networkPluginId)
     const { t } = useI18N()
-    const classes = useStylesExtends(useStyles(), props)
+    const classes = useStylesExtends(useStyles({ contentBackground: providerDescriptor?.backgroundGradient }), props)
 
-    const providerDescriptor = useProviderDescriptor(providerType, NetworkPluginID.PLUGIN_EVM)
     return (
         <>
             <Paper elevation={0}>
                 <Card className={`${classes.content} dashboard-style`} elevation={0}>
                     <Box display="flex" alignItems="center">
-                        <ImageIcon icon={providerDescriptor?.icon} />
+                        <WalletIcon
+                            size={30}
+                            badgeSize={12}
+                            mainIcon={providerDescriptor?.icon}
+                            badgeIcon={networkDescriptor?.icon}
+                        />
                         <Box display="flex" flex={1} flexDirection="column" sx={{ marginLeft: 2 }}>
-                            <Typography>
+                            <Typography className={classes.connectWith}>
                                 {loading
-                                    ? t('plugin_wallet_connecting_with')
+                                    ? t('plugin_wallet_connect_with')
                                     : t(connected ? 'plugin_wallet_connected_with' : 'plugin_wallet_connect_with')}{' '}
-                                {resolveProviderName(providerType)}
+                                {Utils?.resolveProviderName?.(providerType)}
                             </Typography>
                             {loading ? (
                                 <Box display="flex" alignItems="center">
-                                    <CircularProgress size={14} color="primary" sx={{ marginRight: 1 }} />
-                                    <Typography variant="body2">{t('initializing')}</Typography>
+                                    <CircularProgress className={classes.progress} size={14} sx={{ marginRight: 1 }} />
+                                    <Typography variant="body2" className={classes.progress}>
+                                        {t('initializing')}
+                                    </Typography>
                                 </Box>
                             ) : null}
                             {!loading && error ? (
@@ -96,30 +118,32 @@ export function ConnectionProgress(props: ConnectionProgressProps) {
                     </Box>
                 </Card>
             </Paper>
-            <Card className={classes.tipContent} elevation={0}>
-                <WarningTriangleIcon />
-                <Typography className={classes.tipContentText} variant="body2">
-                    <Trans
-                        i18nKey="plugin_wallet_connect_tip"
-                        components={{
-                            providerLink: resolveProviderHomeLink(providerType) ? (
-                                <Link
-                                    className={classes.tipLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    href={resolveProviderHomeLink(providerType)}
-                                />
-                            ) : (
-                                <span />
-                            ),
-                        }}
-                        values={{
-                            providerName: resolveProviderName(providerType),
-                            providerShortenLink: resolveProviderShortenLink(providerType),
-                        }}
-                    />
-                </Typography>
-            </Card>
+            {providerDescriptor?.ID === `${NetworkPluginID.PLUGIN_EVM}_walletconnect` ? null : (
+                <Card className={classes.tipContent} elevation={0}>
+                    <WarningTriangleIcon className={classes.warningTriangleIcon} />
+                    <Typography className={classes.tipContentText} variant="body2">
+                        <Trans
+                            i18nKey="plugin_wallet_connect_tip"
+                            components={{
+                                providerLink: Utils?.resolveProviderHomeLink?.(providerType) ? (
+                                    <Link
+                                        className={classes.tipLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        href={Utils?.resolveProviderHomeLink?.(providerType)}
+                                    />
+                                ) : (
+                                    <span />
+                                ),
+                            }}
+                            values={{
+                                providerName: Utils?.resolveProviderName?.(providerType),
+                                providerShortenLink: Utils?.resolveProviderShortenLink?.(providerType),
+                            }}
+                        />
+                    </Typography>
+                </Card>
+            )}
         </>
     )
 }

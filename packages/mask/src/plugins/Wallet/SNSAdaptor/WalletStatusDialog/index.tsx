@@ -12,7 +12,7 @@ import { WalletMessages } from '../../messages'
 
 const useStyles = makeStyles()((theme) => ({
     content: {
-        padding: theme.spacing(2.5),
+        padding: theme.spacing(2),
         overflowX: 'hidden',
     },
     footer: {
@@ -61,7 +61,7 @@ export function WalletStatusDialog(props: WalletStatusDialogProps) {
     // #endregion
 
     return (
-        <InjectedDialog title="Mask Network" open={open} onClose={closeDialog} maxWidth="sm">
+        <InjectedDialog title={t('plugin_wallet_dialog_title')} open={open} onClose={closeDialog} maxWidth="sm">
             <DialogContent className={classes.content}>
                 <WalletStatusBox showPendingTransaction />
             </DialogContent>
