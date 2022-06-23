@@ -47,7 +47,8 @@ export const Flags = {
     has_no_WebRTC: process.env.engine === 'safari' || !globalThis?.navigator?.permissions?.query,
     // #endregion
     using_emoji_flag: true,
-    shadowRootMode: process.env.channel === 'beta' ? 'open' : 'closed',
+    /** open shadow root for e2e testing */
+    shadowRootMode: process.env.channel === 'e2e' ? 'open' : 'closed',
 } as const
 
 if (process.env.NODE_ENV === 'development') {

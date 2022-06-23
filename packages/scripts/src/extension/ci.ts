@@ -18,7 +18,6 @@ export const ciBuild = series(
         zipTo(BUILD_PATH, 'MaskNetwork.base.zip'),
         // Chrome version is the same with base version
         zipTo(BUILD_PATH, 'MaskNetwork.chromium.zip'),
-        buildTarget('Firefox', { firefox: true, 'output-path': 'build-firefox' }, 'MaskNetwork.firefox.zip'),
         buildTarget('Android', { android: true, 'output-path': 'build-android' }, 'MaskNetwork.gecko.zip'),
         buildTarget('iOS', { iOS: true, 'output-path': 'build-iOS' }, 'MaskNetwork.iOS.zip'),
         buildTarget('Firefox', { firefox: true, 'output-path': 'build-firefox' }, 'MaskNetwork.firefox.zip'),
@@ -26,6 +25,16 @@ export const ciBuild = series(
             'Chromium-beta',
             { chromium: true, beta: true, 'output-path': 'build-chromium-beta' },
             'MaskNetwork.chromium-beta.zip',
+        ),
+        buildTarget(
+            'Firefox-e2e',
+            { firefox: true, e2e: true, 'output-path': 'build-firefox-e2e' },
+            'MaskNetwork.firefox-e2e.zip',
+        ),
+        buildTarget(
+            'Chromium-e2e',
+            { chromium: true, e2e: true, 'output-path': 'build-chromium-e2e' },
+            'MaskNetwork.chromium-e2e.zip',
         ),
     ),
 )

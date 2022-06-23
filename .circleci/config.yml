@@ -61,11 +61,17 @@ jobs:
           path: MaskNetwork.firefox.zip
           destination: /MaskNetwork.firefox.zip
       - store_artifacts:
+          path: MaskNetwork.firefox-e2e.zip
+          destination: /MaskNetwork.firefox-e2e.zip
+      - store_artifacts:
           path: MaskNetwork.gecko.zip
           destination: /MaskNetwork.gecko.zip
       - store_artifacts:
           path: MaskNetwork.chromium-beta.zip
           destination: /MaskNetwork.chromium-beta.zip
+      - store_artifacts:
+          path: MaskNetwork.chromium-e2e.zip
+          destination: /MaskNetwork.chromium-e2e.zip
       - persist_to_workspace:
           root: ~/repo/
           paths:
@@ -73,7 +79,9 @@ jobs:
             - MaskNetwork.iOS.zip
             - MaskNetwork.chromium.zip
             - MaskNetwork.chromium-beta.zip
+            - MaskNetwork.chromium-e2e.zip
             - MaskNetwork.firefox.zip
+            - MaskNetwork.firefox-e2e.zip
             - MaskNetwork.gecko.zip
   publish-github-release:
     docker:
