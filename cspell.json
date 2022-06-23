@@ -3,6 +3,7 @@
     "dictionaries": ["typescript", "node", "html", "css", "fonts"],
     "ignorePaths": [
         ".github",
+        ".circleci",
         ".prettierignore",
         "*.snap",
         "**/*.json",
