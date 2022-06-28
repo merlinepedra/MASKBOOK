@@ -113,7 +113,8 @@
       "@emotion/serialize@1.0.4": "patches/@emotion__serialize@1.0.4.patch",
       "@emotion/server@11.4.0": "patches/@emotion__server@11.4.0.patch",
       "@emotion/styled@11.9.3": "patches/@emotion__styled@11.9.3.patch",
-      "@emotion/utils@1.1.0": "patches/@emotion__utils@1.1.0.patch"
+      "@emotion/utils@1.1.0": "patches/@emotion__utils@1.1.0.patch",
+      "@sentry/core@7.3.0": "patches/@sentry__core@7.3.0.patch"
     }
   }
 }

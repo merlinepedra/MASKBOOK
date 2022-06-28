@@ -8,11 +8,13 @@ import { buildInjectedScript, watchInjectedScript } from '../projects/injected-s
 import { buildMaskSDK, watchMaskSDK } from '../projects/mask-sdk'
 import { buildPolyfill } from '../projects/polyfill'
 import { buildGun } from '../projects/gun'
+import { buildSentry } from '../projects/sentry'
 
 const presets = ['chromium', 'firefox', 'android', 'iOS', 'base'] as const
 const otherFlags = ['beta', 'insider', 'reproducible', 'profile', 'mv3', 'readonlyCache', 'progress'] as const
 
 export async function extension(f?: Function | ExtensionBuildArgs) {
+    await buildSentry()
     await buildPolyfill()
     await buildInjectedScript()
     await buildGun()
@@ -22,6 +24,7 @@ export async function extension(f?: Function | ExtensionBuildArgs) {
 }
 export async function extensionWatch(f?: Function | ExtensionBuildArgs) {
     buildPolyfill()
+    buildSentry()
     buildGun()
     watchInjectedScript()
     watchMaskSDK()

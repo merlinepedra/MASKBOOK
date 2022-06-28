@@ -31,6 +31,9 @@ patchedDependencies:
   '@emotion/utils@1.1.0':
     hash: hwsjpkbm4z6ekvebi6v7t5jt6a
     path: patches/@emotion__utils@1.1.0.patch
+  '@sentry/core@7.3.0':
+    hash: slppt2u7q3em5yrxpisr2vi75y
+    path: patches/@sentry__core@7.3.0.patch
 
 importers:
 
@@ -1213,6 +1216,19 @@ importers:
       '@types/lodash': 4.14.182
       '@types/proper-lockfile': 4.1.2
       ts-node: 10.8.1
+
+  packages/sentry:
+    specifiers:
+      '@rollup/plugin-node-resolve': ^13.3.0
+      '@rollup/plugin-replace': ^4.0.0
+      '@sentry/browser': '7'
+      rollup: ^2.75.6
+    dependencies:
+      '@sentry/browser': 7.3.0
+    devDependencies:
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@2.75.6
+      '@rollup/plugin-replace': 4.0.0_rollup@2.75.6
+      rollup: 2.75.6
 
   packages/shared:
     specifiers:
@@ -6839,7 +6855,6 @@ packages:
       '@rollup/pluginutils': 3.1.0_rollup@2.75.6
       magic-string: 0.25.9
       rollup: 2.75.6
-    dev: false
 
   /@rollup/plugin-sucrase/4.0.4_rollup@2.75.6:
     resolution: {integrity: sha512-YH4J8yoJb5EVnLhAwWxYAQNh2SJOR+SdZ6XdgoKEv6Kxm33riYkM8MlMaggN87UoISP52qAFyZ5ey56wu6umGg==}
@@ -6870,6 +6885,49 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
     dev: true
+
+  /@sentry/browser/7.3.0:
+    resolution: {integrity: sha512-UJMTDbajKNRGrs4ZQNelrPDaATvSZ9uELpPOtPSG6JUvB1BCwGgsgzz55RS0Uqs7B8KhMnDQ0kIn3FMewM4FMg==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/core': 7.3.0_slppt2u7q3em5yrxpisr2vi75y
+      '@sentry/types': 7.3.0
+      '@sentry/utils': 7.3.0
+      tslib: 1.14.1
+    dev: false
+
+  /@sentry/core/7.3.0_slppt2u7q3em5yrxpisr2vi75y:
+    resolution: {integrity: sha512-EvuWVlYm0F0+BtIEmQiCL31Fw0cfKSwUTmxc99wvouaabpHBr2zCJHRxaXOWzxS705bYBJEQiFDTIHfoOQZMzA==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/hub': 7.3.0
+      '@sentry/types': 7.3.0
+      '@sentry/utils': 7.3.0
+      tslib: 1.14.1
+    dev: false
+    patched: true
+
+  /@sentry/hub/7.3.0:
+    resolution: {integrity: sha512-0GtTaWf/hoAMoIFY7Ke6eozIbG3FdIPM364sER4SxUQVSklp6AORrV6p82IgWPROK6aj83cPk9Bszgi6RiF/BA==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.3.0
+      '@sentry/utils': 7.3.0
+      tslib: 1.14.1
+    dev: false
+
+  /@sentry/types/7.3.0:
+    resolution: {integrity: sha512-cGkHdh9+uvbFTj65TjWcXuhe6vQiMY+U+N2GE5xCfmZT9hwuouCASViNsbJMpZqvCg+Yi0fasQLZ71rujiRNOA==}
+    engines: {node: '>=8'}
+    dev: false
+
+  /@sentry/utils/7.3.0:
+    resolution: {integrity: sha512-xUP8TBf2p/c6CN8eFQ7Y+xk0IFrJXsph5ScozqNl/2l/Xs8hd2EiYETqgUklphoYD4J2RxvPwMyqBL15QN6wNg==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.3.0
+      tslib: 1.14.1
+    dev: false
 
   /@servie/events/3.0.0:
     resolution: {integrity: sha512-Zd79bWhTuG8NvPgSiOcivorJIDg+goMw76TIqYTIR5ua5HOEkS29fmIh2VVSeDeabNF6z8ceTwzB0pSh/BhXyw==}
@@ -9947,7 +10005,7 @@ packages:
   /@types/resolve/1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 17.0.34
+      '@types/node': 17.0.45
 
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
