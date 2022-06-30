@@ -10,6 +10,7 @@ import { makeStyles, MaskLoadingButton } from '@masknet/theme'
 import { useSharedI18N } from '../../../locales'
 import { LoadingAnimation } from '../LoadingAnimation'
 import type { Web3Helper } from '@masknet/plugin-infra/web3'
+import { TokenListMode } from './type'
 
 const useStyles = makeStyles()((theme) => ({
     icon: {
@@ -71,6 +72,7 @@ export const getFungibleTokenItem =
         getBalance: (address: string) => string,
         isSelected: (address: string) => boolean,
         isLoading: (address: string) => boolean,
+        mode: TokenListMode,
         importToken: (
             token: FungibleToken<Web3Helper.Definition[T]['ChainId'], Web3Helper.Definition[T]['SchemaType']>,
         ) => Promise<void>,
@@ -110,6 +112,10 @@ export const getFungibleTokenItem =
         }
 
         const action = useMemo(() => {
+            if (mode === TokenListMode.Manage) {
+                if (source === 'personal') return <span>Delete</span>
+                return <span>Open</span>
+            }
             return source !== 'external' ? (
                 <span>
                     {loading ? (
