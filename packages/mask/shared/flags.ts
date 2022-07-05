@@ -49,6 +49,9 @@ export const Flags = {
     using_emoji_flag: true,
     /** open shadow root for e2e testing */
     shadowRootMode: process.env.channel === 'e2e' ? 'open' : 'closed',
+
+    /** we still need to handle image encoding */
+    v37PayloadDefaultEnabled: false, // new Date() > new Date('2022-07-01'),
 } as const
 
 if (process.env.NODE_ENV === 'development') {
