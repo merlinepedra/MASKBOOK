@@ -7,6 +7,8 @@
     { "path": "./packages/mask-sdk/main" },
     { "path": "./packages/mask-sdk/public-api" },
     { "path": "./packages/dashboard" },
+    // Temp
+    { "path": "./packages/plugin-infra-external" },
     // Storybooks are considered as a "project" not depended by any other project
     { "path": "./packages/dashboard/stories" },
     { "path": "./packages/theme/stories" },

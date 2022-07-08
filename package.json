@@ -25,7 +25,8 @@
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
     "test:debug": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand",
     "test:update": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js -u",
-    "spellcheck": "cspell lint --no-must-find-files"
+    "spellcheck": "cspell lint --no-must-find-files",
+    "watch-external": "gulp external-plugin-watch"
   },
   "dependencies": {
     "@dimensiondev/kit": "0.0.0-20220617045824-8bc7a27",
@@ -62,7 +63,7 @@
     "@masknet/cli": "workspace:*",
     "@masknet/serializer": "workspace:*",
     "@nice-labs/git-rev": "^3.5.0",
-    "@swc/core": "^1.2.177",
+    "@swc/core": "^1.2.205",
     "@types/lodash-es": "^4.17.6",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/experimental-utils": "^5.28.0",

@@ -97,5 +97,10 @@ globalThis.regeneratorRuntime = undefined
     }
 }
 
+globalThis.__mask__compartment__modules__ = new Map()
+globalThis.__mask__compartment__define__ = function (path, record) {
+    __mask__compartment__modules__.set(path, record)
+}
+
 // As the return value of the executeScript
 undefined

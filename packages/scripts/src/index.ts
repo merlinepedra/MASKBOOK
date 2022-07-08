@@ -21,3 +21,6 @@ export { buildInjectedScript, watchInjectedScript } from './projects/injected-sc
 export { buildMaskSDK, watchMaskSDK } from './projects/mask-sdk'
 export { buildPolyfill } from './projects/polyfill'
 export { buildGun } from './projects/gun'
+
+// External plugins
+export { externalPlugin, externalPluginWatch } from './external-plugins'
