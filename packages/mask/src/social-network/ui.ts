@@ -13,6 +13,7 @@ import {
 } from '@masknet/shared-base'
 import { Environment, assertNotEnvironment, ValueRef } from '@dimensiondev/holoflows-kit'
 import { IdentityResolved, PluginId, startPluginSNSAdaptor } from '@masknet/plugin-infra/content-script'
+import { createSiteAdaptorPluginHost } from '@masknet/plugin-infra-external/content-script'
 import { getCurrentIdentifier, getCurrentSNSNetwork } from '../social-network-adaptor/utils'
 import { createPluginHost, createSharedContext } from '../plugin-infra/host'
 import { definedSocialNetworkUIs } from './define'
@@ -143,6 +144,8 @@ export async function activateSocialNetworkUIInner(ui_deferred: SocialNetworkUI.
             }
         }),
     )
+
+    createSiteAdaptorPluginHost({}, signal)
 
     setupShadowRootPortal()
 

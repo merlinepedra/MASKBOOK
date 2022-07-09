@@ -16,7 +16,12 @@ export function createPluginHost<HostHook, RunningInstance>(
         for (const plugin of plugins) {
             result.set(
                 plugin,
-                Result.wrapAsync(() => startPlugin(plugin, hooks, signal)).then((x) => (result.set(plugin, x), x)),
+                Result.wrapAsync(() =>
+                    startPlugin(plugin, hooks, signal).catch((err) => {
+                        console.error(`Failed to start plugin ${plugin}`, err)
+                        return Promise.reject(err)
+                    }),
+                ).then((x) => (result.set(plugin, x), x)),
             )
         }
         return result

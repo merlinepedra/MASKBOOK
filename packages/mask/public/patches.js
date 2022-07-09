@@ -101,6 +101,7 @@ globalThis.__mask__compartment__modules__ = new Map()
 globalThis.__mask__compartment__define__ = function (path, record) {
     __mask__compartment__modules__.set(path, record)
 }
+globalThis.__mask__compartment__manifests__ = new Map()
 
 // As the return value of the executeScript
 undefined

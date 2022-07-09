@@ -4,6 +4,7 @@ import { join } from 'path'
 import { ROOT_PATH, task, watchTask } from '../utils'
 import { Transform, TransformCallback } from 'stream'
 import { readFileSync } from 'node:fs'
+import { prettier } from '../utils/prettier'
 
 // https://github.com/paulmillr/chokidar/issues/777 ?
 const fixGlob = (path: string) => path.replace(/\\/g, '/')
@@ -12,9 +13,8 @@ function builder(id: string, glob: string) {
     task(compile, 'external-plugin-build: ' + id, 'Build ' + id)
     return compile
     function compile() {
-        const input = fixGlob(join(ROOT_PATH, glob, '**', '*.{mjs,js}'))
+        const input = fixGlob(join(ROOT_PATH, glob, '**', '*.{mjs,js,json}'))
         const output = fixGlob(join(ROOT_PATH, 'dist', 'external-plugins', id))
-        console.log(input, output)
         return src([input], {
             since: lastRun(compile),
             cwd: ROOT_PATH,
@@ -58,6 +58,24 @@ class PluginTransform extends Transform {
         super({ objectMode: true, defaultEncoding: 'utf-8' })
     }
     override _transform(file: any, encoding: BufferEncoding, callback: TransformCallback): void {
+        const virtualPath = 'mask-plugin://' + this.id + '/' + file.relative.replace(/\\/g, '/')
+
+        if (file.relative.endsWith('.json')) {
+            const content = `{
+const json = ${JSON.stringify(JSON.stringify(JSON.parse(file.contents.utf8Slice().replace(/\s+\/\/.+/g, ''))))};
+__mask__compartment__define__(${JSON.stringify(virtualPath)}, { initialize(env) { env.default = JSON.parse(json) } });
+${
+    file.relative === 'mask-manifest.json'
+        ? `__mask__compartment__manifests__.set(${JSON.stringify(this.id)}, JSON.parse(json))`
+        : ''
+}
+}`
+            file.path = file.path + '.js'
+            prettier(content)
+                .then((data) => (file.contents = Buffer.from(data, 'utf-8')))
+                .then(() => callback(null, file))
+            return
+        }
         const wasm = require.resolve('@masknet/static-module-record-swc')
 
         transform(file.contents.utf8Slice(), {
@@ -71,7 +89,7 @@ class PluginTransform extends Transform {
                                 template: {
                                     type: 'callback',
                                     callback: '__mask__compartment__define__',
-                                    firstArg: 'mask-plugin://' + this.id + '/' + file.relative.replace(/\\/g, '/'),
+                                    firstArg: virtualPath,
                                 },
                             },
                         ],
@@ -81,7 +99,7 @@ class PluginTransform extends Transform {
         }).then(
             (output) => {
                 file.contents = Buffer.from(output.code, 'utf-8')
-                if (file.path.endsWith('.mjs')) file.path = file.path.replace(/\.mjs$/, '.js')
+                file.path = file.path + '.js'
                 callback(null, file)
             },
             (err) => callback(err),

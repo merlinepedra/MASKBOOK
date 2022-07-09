@@ -19,7 +19,7 @@ export interface WorkerHooks {
     backupHandler: Plugin.Worker.BackupHandler | undefined
 }
 export interface WorkerPluginHostHooks {
-    taggedStorage: Plugin.Worker.DatabaseStorage
+    createTaggedStorage(id: string, signal: AbortSignal): Plugin.Worker.DatabaseStorage
 }
 function createWorkerEnv(id: string, host: WorkerPluginHostHooks, parentSignal: AbortSignal) {
     const abortController = new AbortController()
@@ -29,7 +29,7 @@ function createWorkerEnv(id: string, host: WorkerPluginHostHooks, parentSignal: 
     Object.setPrototypeOf(modules.moduleMap, peerDeps)
 
     modules.addNamespace('@masknet/plugin/worker', {
-        taggedStorage: host.taggedStorage,
+        taggedStorage: host.createTaggedStorage(id, signal),
         addBackupHandler: (handler: Plugin.Worker.BackupHandler) => {
             if (hooks.backupHandler) throw new Error('Backup handler already set')
             console.log('[Plugin]', id, 'has registered a backup handler', handler)
@@ -54,13 +54,13 @@ export async function startWorkerPlugin(
     const manifest = getPluginManifest(id)
     if (!manifest) throw new Error(`Plugin ${id} does not have a valid manifest.`)
 
-    const { worker, rpc, rpc_generator } = manifest.entries || {}
+    const { background, rpc, rpc_generator } = manifest.entries || {}
     const env = createWorkerEnv(id, host, parentSignal)
 
     // this plugin does not need to be started in the worker.
-    if (!worker && !rpc && !rpc_generator) return env
+    if (!background && !rpc && !rpc_generator) return env
 
-    if (worker) await env.compartment.import(getURL(id, worker))
+    if (background) await env.compartment.import(getURL(id, background))
     const channel = new WebExtensionMessage<{ _: any; $: any }>({ domain: `mask-plugin-${id}-rpc` })
     if (rpc) {
         AsyncCall(env.compartment.import(getURL(id, rpc)), {

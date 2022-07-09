@@ -1,6 +1,5 @@
 import { Compartment, createModuleCache } from '@masknet/compartment'
 import { createCompartment } from './compartment.js'
-import type { Plugin } from '@masknet/plugin-infra'
 import { combineAbortSignal } from '@dimensiondev/kit'
 import { peerDepsDOM } from '../modules/peer-deps-dom.js'
 import { getPluginManifest } from '../../utils/global-store.js'
@@ -11,12 +10,16 @@ import { serializer } from '@masknet/shared-base'
 import { createPluginI18N } from '../internal/i18n-dom.js'
 import { usePluginWrapper } from '@masknet/plugin-infra/content-script'
 
-export interface SiteAdaptorPluginHooks {}
-export interface SiteAdaptorHostHooks {
-    taggedStorage: Plugin.Worker.DatabaseStorage
+export interface RunningSiteAdaptor {
+    abort(): void
+    signal: AbortSignal
+    compartment: Compartment
+    hooks: SiteAdaptorPluginHooks
 }
+export interface SiteAdaptorPluginHooks {}
+export interface SiteAdaptorHostHooks {}
 
-function createSiteAdaptorEnv(id: string, host: SiteAdaptorHostHooks, parentSignal: AbortSignal) {
+function createSiteAdaptorEnv(id: string, host: SiteAdaptorHostHooks, parentSignal: AbortSignal): RunningSiteAdaptor {
     const abortController = new AbortController()
     const signal = combineAbortSignal(parentSignal, abortController.signal)
 
@@ -56,7 +59,7 @@ function createSiteAdaptorEnv(id: string, host: SiteAdaptorHostHooks, parentSign
 
     const hooks: SiteAdaptorPluginHooks = {}
 
-    return { compartment, hooks }
+    return { compartment, hooks, abort: () => abortController.abort(), signal }
 }
 
 export async function startSiteAdaptorPlugin(id: string, host: SiteAdaptorHostHooks, parentSignal: AbortSignal) {

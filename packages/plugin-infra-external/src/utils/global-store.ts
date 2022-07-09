@@ -1,24 +1,23 @@
-import type { ModuleDescriptor } from '@masknet/compartment'
+import type { SyntheticModuleRecord, ModuleDescriptor } from '@masknet/compartment'
 import type { PluginManifest } from '../types.js'
 
 export function enumeratePlugins(): readonly string[] {
-    if (typeof __mask__register__external__plugins__ === 'undefined') return []
-    return __mask__register__external__plugins__
+    if (typeof __mask__compartment__manifests__ === 'undefined') return []
+    return Array.from(__mask__compartment__manifests__.keys())
 }
 
 export function getPreloadedModule(url: string): ModuleDescriptor | undefined {
-    if (typeof __mask__compartment__modules__) return __mask__compartment__modules__.get(url)
+    if (typeof __mask__compartment__modules__ === 'object') return { record: __mask__compartment__modules__.get(url)! }
     return undefined
 }
 
 export function getPluginManifest(id: string): PluginManifest | undefined {
-    const desc = getPreloadedModule(`mask://${id}/manifest.json`)
-    if (!desc) return
-    if (!('namespace' in desc)) return
+    const manifest = __mask__compartment__manifests__!.get(id)
+    if (!manifest) return
     // TODO: validate
-    return JSON.parse(JSON.stringify(desc.namespace))
+    return JSON.parse(JSON.stringify(manifest))
 }
 
 // global variables
-declare const __mask__compartment__modules__: ReadonlyMap<string, ModuleDescriptor>
-declare const __mask__register__external__plugins__: undefined | readonly string[]
+declare const __mask__compartment__modules__: undefined | ReadonlyMap<string, SyntheticModuleRecord>
+declare const __mask__compartment__manifests__: undefined | ReadonlyMap<string, PluginManifest>
