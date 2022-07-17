@@ -82,6 +82,8 @@ export function NFTCardStyledAssetPlayer(props: Props) {
     return isImageToken || isNative ? (
         <div className={classes.imgWrapper}>
             <img
+                loading="lazy"
+                decoding="async"
                 width="100%"
                 style={{ objectFit: 'cover' }}
                 src={url || tokenDetailed?.metadata?.imageURL || tokenDetailed?.metadata?.mediaURL}
