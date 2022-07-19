@@ -4,7 +4,13 @@ import { Flags } from '../../shared'
 import type { SocialNetworkUI } from './types'
 import { currentSetupGuideStatus } from '../settings/settings'
 import type { SetupGuideCrossContextStatus } from '../settings/types'
-import { ECKeyIdentifier, EnhanceableSite, i18NextInstance, createSubscriptionFromValueRef } from '@masknet/shared-base'
+import {
+    ECKeyIdentifier,
+    EnhanceableSite,
+    i18NextInstance,
+    createSubscriptionFromValueRef,
+    initLogs,
+} from '@masknet/shared-base'
 import { Environment, assertNotEnvironment, ValueRef } from '@dimensiondev/holoflows-kit'
 import { IdentityResolved, startPluginSNSAdaptor } from '@masknet/plugin-infra/content-script'
 import { getCurrentIdentifier, getCurrentSNSNetwork } from '../social-network-adaptor/utils'
@@ -36,6 +42,8 @@ export let globalUIState: Readonly<SocialNetworkUI.AutonomousState> = {} as any
 
 export async function activateSocialNetworkUIInner(ui_deferred: SocialNetworkUI.DeferredDefinition): Promise<void> {
     assertNotEnvironment(Environment.ManifestBackground)
+
+    initLogs('sns', { sns: ui_deferred.networkIdentifier })
 
     console.log('Activating provider', ui_deferred.networkIdentifier)
     const ui = (activatedSocialNetworkUI = await loadSocialNetworkUI(ui_deferred.networkIdentifier))

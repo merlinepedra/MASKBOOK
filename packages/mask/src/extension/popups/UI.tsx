@@ -1,7 +1,7 @@
 import { lazy, useEffect, useState } from 'react'
 import { Navigate, Route, Routes, HashRouter } from 'react-router-dom'
 import { createInjectHooksRenderer, useActivatedPluginsDashboard } from '@masknet/plugin-infra/dashboard'
-import { PopupRoutes } from '@masknet/shared-base'
+import { initLogs, PopupRoutes } from '@masknet/shared-base'
 import { usePopupFullPageTheme } from '../../utils/theme/useClassicMaskFullPageTheme'
 import '../../social-network-adaptor/browser-action'
 import { PopupContext } from './hook/usePopupContext'
@@ -23,6 +23,7 @@ const RequestPermissionPage = lazy(() => import('./RequestPermission'))
 const PermissionAwareRedirect = lazy(() => import('./PermissionAwareRedirect'))
 const ThirdPartyRequestPermission = lazy(() => import('./ThirdPartyRequestPermission'))
 
+initLogs('popup')
 const PluginRender = createInjectHooksRenderer(useActivatedPluginsDashboard, (x) => x.GlobalInjection)
 function PluginRenderDelayed() {
     const [canRenderPlugin, setRenderPlugins] = useState(false)
