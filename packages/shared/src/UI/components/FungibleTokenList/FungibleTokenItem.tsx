@@ -4,13 +4,14 @@ import classNames from 'classnames'
 import { Link, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import { formatBalance, FungibleToken, NetworkPluginID } from '@masknet/web3-shared-base'
 import { TokenIcon } from '../TokenIcon'
-import { CircleLoadingIcon, PopupLinkIcon } from '@masknet/icons'
+import { CircleLoadingIcon, PopupLinkIcon, TrashLineIcon } from '@masknet/icons'
 import type { MaskSearchableListItemProps } from '@masknet/theme'
 import { makeStyles, MaskLoadingButton } from '@masknet/theme'
 import { useSharedI18N } from '../../../locales'
 import { LoadingAnimation } from '../LoadingAnimation'
 import { useWeb3State, Web3Helper } from '@masknet/plugin-infra/web3'
 import { TokenListMode } from './type'
+import { SettingSwitch } from '../SettingSwitch'
 
 const useStyles = makeStyles()((theme) => ({
     icon: {
@@ -66,6 +67,15 @@ const useStyles = makeStyles()((theme) => ({
         fontWeight: 500,
         lineHeight: '20px',
     },
+    action: {
+        display: 'inline-flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    switch: {
+        position: 'relative',
+        left: theme.spacing(1),
+    },
 }))
 
 export const getFungibleTokenItem =
@@ -78,6 +88,7 @@ export const getFungibleTokenItem =
         importToken: (
             token: FungibleToken<Web3Helper.Definition[T]['ChainId'], Web3Helper.Definition[T]['SchemaType']>,
         ) => Promise<void>,
+        isBlocked: (address: string) => boolean,
     ) =>
     ({
         data: token,
@@ -120,8 +131,20 @@ export const getFungibleTokenItem =
 
         const action = useMemo(() => {
             if (mode === TokenListMode.Manage) {
-                if (source === 'personal') return <span>Delete</span>
-                return <span>Open</span>
+                if (source === 'personal') return <TrashLineIcon size={24} />
+                return (
+                    <SettingSwitch
+                        classes={{ root: classes.switch }}
+                        onClick={(event) => {
+                            event.stopPropagation()
+                        }}
+                        size="small"
+                        checked={!isBlocked(address)}
+                        onChange={(event) => {
+                            event.stopPropagation()
+                        }}
+                    />
+                )
             }
             return source !== 'external' ? (
                 <span>
@@ -181,7 +204,7 @@ export const getFungibleTokenItem =
                             {source === 'personal' && <span> &bull; Added By User</span>}
                         </span>
                     </Typography>
-                    <Typography sx={{ fontSize: 16 }} color="textSecondary" component="span">
+                    <Typography className={classes.action} sx={{ fontSize: 16 }} color="textSecondary" component="span">
                         {action}
                     </Typography>
                 </ListItemText>
